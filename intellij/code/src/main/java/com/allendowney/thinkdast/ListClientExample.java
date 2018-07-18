@@ -22,7 +22,7 @@ public class ListClientExample {
 	public List getList() {
 		return list;
 	}
-	
+
 	public static void main(String[] args) {
 		ListClientExample lce = new ListClientExample();
         @SuppressWarnings("rawtypes")

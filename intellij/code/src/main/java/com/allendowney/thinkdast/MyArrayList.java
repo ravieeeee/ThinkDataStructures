@@ -44,8 +44,17 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public boolean add(T element) {
-		// TODO: FILL THIS IN!
-		return false;
+        if (size >= array.length) {
+            T[] bigger = (T[]) new Object[array.length * 2];
+            System.arraycopy(array, 0, bigger, 0, array.length);
+            array = bigger;
+        }
+		array[size++] = element;
+        // 왜 boolean 형을 return할까?
+        // https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html#add-java.lang.Object-
+        // Collections 인터페이스에서는 중복을 허용하지 않는 collection에 이미 있는 요소를 또 추가하려 할 경우에 false를 return
+        // 이외의 이유로 add가 안될 경우엔 exception을 발생시킴
+		return true;
 	}
 
 	@Override
@@ -110,8 +119,10 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public int indexOf(Object target) {
-		// TODO: FILL THIS IN!
-		return -1;
+		for (int idx = 0; idx < size; idx++) {
+		    if (equals(target, array[idx])) return idx;
+        }
+	    return -1;
 	}
 
 	/** Checks whether an element of the array is the target.
@@ -181,8 +192,13 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public T remove(int index) {
-		// TODO: FILL THIS IN!
-		return null;
+        T element = get(index);
+
+        for (int i = index; i < size - 1; i++) {
+		    array[i] = array[i + 1];
+        }
+        size--;
+	    return element;
 	}
 
 	@Override
@@ -201,8 +217,10 @@ public class MyArrayList<T> implements List<T> {
 
 	@Override
 	public T set(int index, T element) {
-		// TODO: FILL THIS IN!
-		return null;
+		T before = get(index);
+		array[index] = element;
+
+		return before;
 	}
 
 	@Override
