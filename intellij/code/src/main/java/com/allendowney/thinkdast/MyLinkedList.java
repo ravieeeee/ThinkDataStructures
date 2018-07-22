@@ -22,6 +22,10 @@ public class MyLinkedList<E> implements List<E> {
 	 * @author downey
 	 *
 	 */
+
+	// Generic Types Convention
+	// https://docs.oracle.com/javase/tutorial/java/generics/types.html
+
 	private class Node {
 		public E data;
 		public Node next;
@@ -30,15 +34,21 @@ public class MyLinkedList<E> implements List<E> {
 			this.data = data;
 			this.next = null;
 		}
+
 		@SuppressWarnings("unused")
 		public Node(E data, Node next) {
 			this.data = data;
 			this.next = next;
 		}
+
 		public String toString() {
 			return "Node(" + data.toString() + ")";
 		}
 	}
+
+	// size 정보 유지해야 할까??
+	// 장점 : size 메소드를 상수 시간으로 구현
+	// 단점 : 중복 정보 유지로 인한 위험성
 
 	private int size;            // keeps track of the number of elements
 	private Node head;           // reference to the first node
@@ -82,7 +92,13 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public void add(int index, E element) {
-		//TODO: FILL THIS IN!
+        if (index == 0) {
+            head = new Node(element, head);
+        } else {
+            Node front = getNode(index - 1);
+            front.next = new Node(element, front.next);
+        }
+        size++;
 	}
 
 	@Override
@@ -143,8 +159,16 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public int indexOf(Object target) {
-		//TODO: FILL THIS IN!
-		return -1;
+        Node node = head;
+
+	    for (int index = 0; index < size; index++) {
+            if (equals(target, node.data)) {
+                return index;
+            }
+            node = node.next;
+        }
+
+        return -1;
 	}
 
 	/** Checks whether an element of the array is the target.
@@ -208,8 +232,17 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public E remove(int index) {
-		//TODO: FILL THIS IN!
-		return null;
+		E element = get(index);
+
+		if (index == 0) {
+		    head = head.next;
+        } else {
+		    Node front = getNode(index - 1);
+		    front.next = front.next.next;
+        }
+        size--;
+
+	    return element;
 	}
 
 	@Override
@@ -244,13 +277,13 @@ public class MyLinkedList<E> implements List<E> {
 		if (fromIndex < 0 || toIndex >= size || fromIndex > toIndex) {
 			throw new IndexOutOfBoundsException();
 		}
-		// TODO: classify this and improve it.
-		int i = 0;
+
+		int i = fromIndex;
 		MyLinkedList<E> list = new MyLinkedList<E>();
-		for (Node node=head; node != null; node = node.next) {
-			if (i >= fromIndex && i <= toIndex) {
+		for (Node node = getNode(fromIndex); node != null; node = node.next) {
+			if (i <= toIndex) {
 				list.add(node.data);
-			}
+			} else if (i > toIndex) break;
 			i++;
 		}
 		return list;
